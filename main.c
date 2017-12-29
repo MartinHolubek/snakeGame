@@ -7,7 +7,7 @@ int main(int argc, char *argv[]) {
  int x = 0, y = 0;
  int max_y = 0, max_x = 0;
  int next_x = 0;
- int direction = 1;
+ int direction = 1;//nieco je zle
 
  initscr();
  noecho();
