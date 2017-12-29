@@ -14,22 +14,30 @@ int main(int argc, char *argv[]) {
  curs_set(FALSE);
 
  // Global var `stdscr` is created by the call to `initscr()`
- getmaxyx(stdscr, max_y, max_x);
+ char ch;
 
  while(1) {
- clear();
- mvprintw(y, x, "o");
- refresh();
+    getmaxyx(stdscr, max_y, max_x);
+    clear();
+    mvprintw(y, x, "o");
+    refresh();
 
- usleep(DELAY);
+    usleep(DELAY);
 
- next_x = x + direction;
+    next_x = x + direction;
 
- if (next_x >= max_x || next_x < 0) {
- direction*= -1;
- } else {
- x+= direction;
- }
+    if (next_x >= max_x || next_x < 0) {
+        //vrati sa naspat
+        //direction*= -1;
+        x = 0;
+    } else {
+        x+= direction;
+    }
+    
+    timeout(10);
+    if ((ch = getch()) == 100) { // 100 means a "d". Note also that i used getch() not getchar()
+      break;
+    }
  }
 
  endwin();
