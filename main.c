@@ -5,21 +5,12 @@
 #include <stdlib.h>
 #include <sys/select.h>
 #include <time.h>
+#include "maxValue.h"
 
-#define MAXWIDTH 50
-#define MAXHEIGHT 30
-#define DELAY 40000
 
-void nakresliPole() {    
-    for (int i = 1; i < MAXHEIGHT; i++) {
-        mvprintw(i, 1, "*");
-        mvprintw(i, MAXWIDTH, "*");
-    }
-    for (int j = 1; j < MAXWIDTH; j++) {
-        mvprintw(1, j, "*");
-        mvprintw(MAXHEIGHT, j, "*");
-    }
-}
+#define DELAY 80000
+
+
 
 int klavesa(void) {    /* kontroluje ci bola stlacena nejaka klavesa */
     struct timeval tv;
@@ -36,9 +27,9 @@ int klavesa(void) {    /* kontroluje ci bola stlacena nejaka klavesa */
 int nabural(int *arrayHad) {    /* kontroluje ci had nabural do steny */
     int x = *arrayHad;
     int y = *(arrayHad+1);
-    if (x < 0 || x > MAXWIDTH) {
+    if (x < 1 || x > getMaxWidth()-1) {
         return 1;
-    } else if (y < 0 || y > MAXHEIGHT) {
+    } else if (y < 1 || y > getMaxHeight()-1) {
         return 1;
     } else return 0;
 }
@@ -76,8 +67,8 @@ void pohyb(int *arrayHad, int smerX, int smerY, int dlzkaHada) {
 void noveJablko(int* jablkoX, int* jablkoY, int *zjedene) {   /* jablko sa spawne na random pozicii, a dokym nie je zjedene tak sa spawnuje stale na tej istej pozicii */
     if (*zjedene) {
         srand(time(0));     //aktualny cas sa pouzije ako seed na radnom
-        *jablkoX = (rand() % MAXWIDTH) + 1;
-        *jablkoY = (rand() % MAXHEIGHT) + 1;
+        *jablkoX = (rand() % getMaxWidth()) + 1;
+        *jablkoY = (rand() % getMaxHeight()) + 1;
         *zjedene = 0;
     }
     mvprintw(*jablkoY, *jablkoX,"+");
@@ -98,8 +89,28 @@ void zjedenieJablka(int *arrayHad, int jablkoX, int jablkoY, int *zjedene, int *
     mvprintw(1, 1, "skore: %d", *dlzkaHada);
 }
 
+void nastavStrany(){
+    int height = 0;
+    int width = 0;
+    getmaxyx (stdscr, height, width);
+    setMaxHeight(height);
+    setMaxWidth(width);
+}
+
+void nakresliPole() {    
+    for (int i = 1; i< getMaxHeight(); i++) {
+        mvprintw(i, 1, "*");
+        mvprintw(i, getMaxWidth()-1, "*");
+    }
+    for (int j = 1; j < getMaxWidth(); j++) {
+        mvprintw(1, j, "*");
+        mvprintw(getMaxHeight()-1, j, "*");
+    }
+}
+
+
 int main() {
-        
+    
     int arrayHad[100][2];
     arrayHad[0][0] = 3;
     arrayHad[0][1] = 3;
@@ -110,17 +121,20 @@ int main() {
     int zjedene = 1;
     int dlzkaHada = 3;
     int keyPressed = 0;
+    
 
     initscr();			/* Start curses mode */
     curs_set(false);              /* Hide cursor */
     noecho();
-    nakresliPole();
+   
     getch();           /* Hra zacne po stlaceni hocakej klavesi */
-    getch();
-    getch();
+    nastavStrany();
     
     while (!nabural(&arrayHad[0][0])) {
+        nastavStrany();
+        
         erase();
+        nakresliPole();
         noveJablko(&jablkoX, &jablkoY, &zjedene);
         pohyb(&arrayHad[0][0], smerX, smerY, dlzkaHada);
         zjedenieJablka(&arrayHad[0][0], jablkoX, jablkoY, &zjedene, &dlzkaHada);
@@ -149,9 +163,8 @@ int main() {
     }
     
     erase();
-    mvprintw(MAXHEIGHT / 2, MAXWIDTH / 4, "Koniec hry! Skore: %d", dlzkaHada);
+    mvprintw(getMaxHeight() / 2, getMaxWidth() / 4, "Koniec hry! Skore: %d", dlzkaHada);
     refresh();
-    getch();
     getch();
     endwin();			/* End curses mode */
     return 0;
