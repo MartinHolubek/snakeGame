@@ -126,7 +126,7 @@ int main() {
     initscr();			/* Start curses mode */
     curs_set(false);              /* Hide cursor */
     noecho();
-    nakresliPole();
+    
     getch();           /* Hra zacne po stlaceni hocakej klavesi */
     nastavStrany();
     while (!nabural(&arrayHad[0][0])) {
@@ -136,6 +136,7 @@ int main() {
         noveJablko(&jablkoX, &jablkoY, &zjedene);
         pohyb(&arrayHad[0][0], smerX, smerY, dlzkaHada);
         zjedenieJablka(&arrayHad[0][0], jablkoX, jablkoY, &zjedene, &dlzkaHada);
+        nakresliPole();
         refresh();
 
         /* ovladanie W-A-S-D */
