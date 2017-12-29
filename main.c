@@ -57,11 +57,11 @@ void pohyb(int *arrayHad, int smerX, int smerY, int dlzkaHada) {
         *(arrayHad + i + 1) = newY;
         mvprintw(newY, newX, "o");
     }
-
     if (smerY != 0) {
+        usleep(DELAY * 2);
+    } else {
         usleep(DELAY);
     }
-    usleep(DELAY);
 }
 
 void noveJablko(int* jablkoX, int* jablkoY, int *zjedene) {   /* jablko sa spawne na random pozicii, a dokym nie je zjedene tak sa spawnuje stale na tej istej pozicii */
