@@ -6,9 +6,20 @@
 #include <sys/select.h>
 #include <time.h>
 
-#define MAXWIDTH 100
-#define MAXHEIGHT 40
+#define MAXWIDTH 50
+#define MAXHEIGHT 30
 #define DELAY 40000
+
+void nakresliPole() {    
+    for (int i = 1; i < MAXHEIGHT; i++) {
+        mvprintw(i, 1, "*");
+        mvprintw(i, MAXWIDTH, "*");
+    }
+    for (int j = 1; j < MAXWIDTH; j++) {
+        mvprintw(1, j, "*");
+        mvprintw(MAXHEIGHT, j, "*");
+    }
+}
 
 int klavesa(void) {    /* kontroluje ci bola stlacena nejaka klavesa */
     struct timeval tv;
@@ -88,7 +99,7 @@ void zjedenieJablka(int *arrayHad, int jablkoX, int jablkoY, int *zjedene, int *
 }
 
 int main() {
-    
+        
     int arrayHad[100][2];
     arrayHad[0][0] = 3;
     arrayHad[0][1] = 3;
@@ -103,7 +114,10 @@ int main() {
     initscr();			/* Start curses mode */
     curs_set(false);              /* Hide cursor */
     noecho();
+    nakresliPole();
     getch();           /* Hra zacne po stlaceni hocakej klavesi */
+    getch();
+    getch();
     
     while (!nabural(&arrayHad[0][0])) {
         erase();
@@ -137,6 +151,7 @@ int main() {
     erase();
     mvprintw(MAXHEIGHT / 2, MAXWIDTH / 4, "Koniec hry! Skore: %d", dlzkaHada);
     refresh();
+    getch();
     getch();
     endwin();			/* End curses mode */
     return 0;
