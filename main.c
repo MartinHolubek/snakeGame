@@ -27,9 +27,9 @@ int klavesa(void) {    /* kontroluje ci bola stlacena nejaka klavesa */
 int nabural(int *arrayHad) {    /* kontroluje ci had nabural do steny */
     int x = *arrayHad;
     int y = *(arrayHad+1);
-    if (x < 0 || x > getMaxWidth()) {
+    if (x < 1 || x > getMaxWidth()-1) {
         return 1;
-    } else if (y < 0 || y > getMaxHeight()) {
+    } else if (y < 1 || y > getMaxHeight()-1) {
         return 1;
     } else return 0;
 }
@@ -98,13 +98,13 @@ void nastavStrany(){
 }
 
 void nakresliPole() {    
-    for (int i = 1; i < getMaxHeight(); i++) {
+    for (int i = 1; i< getMaxHeight(); i++) {
         mvprintw(i, 1, "*");
-        mvprintw(i, getMaxWidth(), "*");
+        mvprintw(i, getMaxWidth()-1, "*");
     }
     for (int j = 1; j < getMaxWidth(); j++) {
         mvprintw(1, j, "*");
-        mvprintw(getMaxHeight(), j, "*");
+        mvprintw(getMaxHeight()-1, j, "*");
     }
 }
 
@@ -126,17 +126,18 @@ int main() {
     initscr();			/* Start curses mode */
     curs_set(false);              /* Hide cursor */
     noecho();
-    
+   
     getch();           /* Hra zacne po stlaceni hocakej klavesi */
     nastavStrany();
+    
     while (!nabural(&arrayHad[0][0])) {
         nastavStrany();
         
         erase();
+        nakresliPole();
         noveJablko(&jablkoX, &jablkoY, &zjedene);
         pohyb(&arrayHad[0][0], smerX, smerY, dlzkaHada);
         zjedenieJablka(&arrayHad[0][0], jablkoX, jablkoY, &zjedene, &dlzkaHada);
-        nakresliPole();
         refresh();
 
         /* ovladanie W-A-S-D */
